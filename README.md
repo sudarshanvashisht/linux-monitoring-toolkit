@@ -5,12 +5,6 @@ for errors, and checks service health — with Slack/email alerting — using
 nothing but core Linux tools (`bash`, `awk`, `sed`, `grep`, `systemctl`,
 `cron`). No agent, no Python, no third-party binary required.
 
-## Why this exists
-
-Most "monitoring" a fresher can point to is "I installed Datadog/New Relic."
-This proves you understand what those agents are actually doing under the
-hood — and it works on any box, including ones you're not allowed to install
-third-party software on.
 
 ## Project structure
 
