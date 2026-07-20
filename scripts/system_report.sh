@@ -65,7 +65,7 @@ while read -r fs size used avail pct mount; do
     send_alert "Disk usage on ${mount} is at ${pct} (threshold: ${DISK_ALERT_THRESHOLD}%)"
     log "    -> ALERT triggered: ${mount} above threshold"
   fi
-done < <(df -hT -x tmpfs -x devtmpfs -x overlay 2>/dev/null | awk 'NR>1 {print $1,$3,$4,$5,$6,$7}')
+done < <(df -hT -x tmpfs -x devtmpfs -x overlay -x squashfs 2>/dev/null | awk 'NR>1 {print $1,$3,$4,$5,$6,$7}')
 
 # --- Top processes by CPU and memory ---
 log "TOP 5 PROCESSES BY CPU:"
