@@ -1,0 +1,5 @@
+# Logs generated at runtime
+logs/*.log
+logs/.offsets/
+logs/sample_logs/
+*.lock
