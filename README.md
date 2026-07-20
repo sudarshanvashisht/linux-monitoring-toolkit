@@ -128,13 +128,3 @@ workspace and paste the URL into `SLACK_WEBHOOK_URL` in `config/toolkit.conf`.
 | Disk check only looking at `/` and missing a full `/var` or `/data` | `system_report.sh` loops over **every** real mounted filesystem from `df`, not just root. |
 | Alert message contains characters that break the Slack JSON payload | `alert.sh` escapes double quotes before building the JSON body. |
 
-## What to say about this project in an interview
-
-- Walk through the offset-tracking logic in `log_scan.sh` — it's the single
-  most "senior" detail in this project and interviewers notice it.
-- Be ready to explain why `set -e` is intentionally *not* used in
-  `system_report.sh` but arguably could be used elsewhere — trade-offs, not
-  dogma.
-- Be ready to explain the difference between exit codes `0`, `1`, and `2` in
-  `service_health.sh` and why that distinction matters for anything
-  downstream consuming this script (cron, CI, another monitoring layer).
