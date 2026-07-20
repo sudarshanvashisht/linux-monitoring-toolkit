@@ -10,32 +10,39 @@ check_services() {
   print_header "SERVICES MONITORING"
 
   if ! has_systemd; then
-    print_warning "systemd is not available (e.g., WSL1 or minimal container)."
+    print_warning "systemd is not available on this host."
     print_status "SERVICES" "SKIPPED (No systemd)" "${C_YELLOW}"
-    return 1
+    return 0
   fi
 
-  local crit=false
+  local any_warning=false
 
   for svc in "${SERVICES_TO_CHECK[@]}"; do
+    # Check if unit file exists / is installed
+    if ! systemctl list-unit-files "${svc}.service" "${svc}" >/dev/null 2>&1; then
+      print_info "${svc} ---------- NOT INSTALLED"
+      continue
+    fi
+
     local status
     status=$(systemctl is-active "${svc}" 2>/dev/null || true)
 
     if [[ "${status}" == "active" ]]; then
-      print_info "${svc}: active"
+      print_info "${svc} ---------- ACTIVE"
     else
-      alert_critical "Service '${svc}' is down (status: ${status:-not found})"
-      crit=true
+      print_warning "${svc} ---------- INACTIVE (${status:-stopped})"
+      alert_warning "Service '${svc}' is installed but INACTIVE (status: ${status:-stopped})"
+      any_warning=true
     fi
   done
 
-  if ${crit}; then
-    comp_status="CRITICAL"
-    comp_color="${C_RED}"
+  if ${any_warning}; then
+    comp_status="WARNING"
+    comp_color="${C_YELLOW}"
   fi
 
   print_status "SERVICES" "${comp_status}" "${comp_color}"
   
-  if [[ "${comp_status}" == "CRITICAL" ]]; then return 2; fi
+  if [[ "${comp_status}" == "WARNING" ]]; then return 1; fi
   return 0
 }
